@@ -2,6 +2,8 @@
 
 A secure and scalable real-time chat application focused on **privacy**, **speed**, and **robust user management**.
 
+![Sign Up](Preview.png)
+
 ---
 
 ## 🚀 Key Features
@@ -36,9 +38,9 @@ A secure and scalable real-time chat application focused on **privacy**, **speed
 
 ---
 
-## 📸 Screenshots
+## 📸 Screenshot
 
-> *(Insert screenshots of Login, Signup, and Chat section here once added)*
+![Chats](ChatSecure.png)
 
 ---
 
