@@ -1,6 +1,6 @@
 # ChatSecure: Secure Real-Time Chat Application
 
-A secure and scalable real-time chat application focused on **privacy**, **speed**, and **robust user management**.
+A secure real-time chat application focused on **privacy**, **speed**, and **robust user management**.
 
 ![Sign Up](Preview.png)
 
@@ -13,6 +13,9 @@ A secure and scalable real-time chat application focused on **privacy**, **speed
 
 - 🔑 **Password Security (bcrypt)**  
   Prevents credential leaks during potential database compromises.
+  
+- 🔒 **End-to-End Message Encryption (AES-256-CBC)**  
+  Encrypts all messages before storing them in MongoDB to preserve privacy even if the database is exposed.
 
 - 💬 **Real-Time Messaging (Socket.io)**  
   Enables seamless real-time communication between users.
@@ -32,7 +35,7 @@ A secure and scalable real-time chat application focused on **privacy**, **speed
 
 - **Frontend**: React.js, Tailwind CSS  
 - **Backend**: Node.js, Express.js  
-- **Security**: JWT, bcrypt, rate-limiting  
+- **Security**: JWT, bcrypt, AES-256-CBC, rate-limiting  
 - **Real-Time**: Socket.io  
 - **Database**: MongoDB
 
@@ -46,9 +49,8 @@ A secure and scalable real-time chat application focused on **privacy**, **speed
 
 ## 🧠 Skills Gained
 
-- Security Best Practices
-- Real-Time Data Communication
-- Scalable Web Architecture
+- Security Best Practices (Auth, Encryption, DDoS Defense)
+- Real-Time Data Communication with Sockets IO
 - MongoDB Schema Design
 - Client-Server Integration
 
