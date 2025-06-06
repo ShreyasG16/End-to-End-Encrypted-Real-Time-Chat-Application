@@ -24,7 +24,7 @@ const secretKey = process.env.MESSAGE_SECRET_KEY; // Must be 32 bytes
 
 export const encrypt = (text) => {
     const iv = crypto.randomBytes(ivLength);
-    const cipher = crypto.createCipheriv(algorithm, Buffer.from(secretKey), iv);
+    const cipher = crypto.createCipheriv(algorithm, Buffer.from(secretKey, 'base64'), iv);
     let encrypted = cipher.update(text, "utf8", "hex");
     encrypted += cipher.final("hex");
 
@@ -36,7 +36,7 @@ export const encrypt = (text) => {
 
 export const decrypt = (encrypted) => {
     const iv = Buffer.from(encrypted.iv, "hex");
-    const decipher = crypto.createDecipheriv(algorithm, Buffer.from(secretKey), iv);
+    const decipher = crypto.createDecipheriv(algorithm, Buffer.from(secretKey, 'base64'), iv);
     let decrypted = decipher.update(encrypted.content, "hex", "utf8");
     decrypted += decipher.final("utf8");
 
