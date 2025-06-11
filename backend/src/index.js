@@ -20,6 +20,9 @@ const __dirname = path.resolve();
 
 //Custom NoSQL Injection Sanitizer
 app.use((req, res, next) => {
+
+  console.log("X-Forwarded-For:", req.headers['x-forwarded-for']);
+  
   const sanitize = (obj) => {
     if (typeof obj !== 'object' || obj === null) return;
     for (const key in obj) {
