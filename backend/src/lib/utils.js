@@ -3,11 +3,11 @@ import crypto from "crypto";
 
 export const generateToken = (userId, res) => {
     const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
-        expiresIn: "7d"
+        expiresIn: "3d"
     });
 
     res.cookie("jwt", token, {
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+        maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days in milliseconds
         httpOnly: true, // prevents XSS
         sameSite: "strict", // prevents CSRF
         secure: process.env.NODE_ENV !== "development" // only secure cookies in prod
