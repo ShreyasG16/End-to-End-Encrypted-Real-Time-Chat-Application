@@ -48,20 +48,13 @@ export const encrypt = (text) => {
 export const decrypt = (encrypted) => {
     const { iv, content, hmac } = encrypted;
 
-    if (!iv || !content || !hmac) {
-        console.log("[Missing decryption fields]");
-        throw new Error("Invalid encrypted format");
-    }
+    // hmac check for new messages
+    if (hmac) {
+        const computedHmac = crypto.createHmac("sha256", hmacKey).update(iv + content).digest("hex");
 
-    // Validate HMAC
-    const computedHmac = crypto
-        .createHmac("sha256", hmacKey)
-        .update(iv + content)
-        .digest("hex");
-
-    if (computedHmac !== hmac) {
-        console.log("[HMAC mismatch]");
-        throw new Error("HMAC mismatch. Message may be tampered.");
+        if (computedHmac !== hmac) {
+            throw new Error("Alert: Tampered Message");
+        }
     }
 
     const decipher = crypto.createDecipheriv(algorithm, secretKey, Buffer.from(iv, "hex"));
@@ -76,20 +69,17 @@ export const decrypt = (encrypted) => {
 export const safeDecrypt = (message) => {
     try {
         if (typeof message === "string") {
-            console.log("[Plaintext Message]", message);
             return message;
         }
 
         const decrypted = decrypt(message);
         if (!decrypted || decrypted.trim() === "") {
-            console.log("[Decryption returned empty]");
-            return "[Decryption Failed]";
+            return "Decryption Failed";
         }
 
-        console.log("[Decrypted Message]", decrypted);
         return decrypted;
     } catch (error) {
-        console.log("[Decryption Error]", error.message);
-        return "[Decryption Failed]";
+       
+        return "Decryption Failed";
     }
 };
