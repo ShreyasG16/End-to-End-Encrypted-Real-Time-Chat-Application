@@ -20,9 +20,10 @@ export const generateToken = (userId, res) => {
 
 const algorithm = "aes-256-cbc";
 const ivLength = 16;
-const secretKey = Buffer.from(process.env.MESSAGE_SECRET_KEY, "base64"); // 32-byte key
-const hmacKey = Buffer.from(process.env.MESSAGE_HMAC_KEY, "base64");     // 32-byte key
+const secretKey = Buffer.from(process.env.MESSAGE_SECRET_KEY, "base64"); // For AES
+const hmacKey = Buffer.from(process.env.MESSAGE_HMAC_KEY, "base64");     // For HMAC
 
+// Encrypting.. message with AES-256-CBC and HMAC-SHA256
 export const encrypt = (text) => {
     const iv = crypto.randomBytes(ivLength);
     const cipher = crypto.createCipheriv(algorithm, secretKey, iv);
@@ -30,8 +31,11 @@ export const encrypt = (text) => {
     let encrypted = cipher.update(text, "utf8", "hex");
     encrypted += cipher.final("hex");
 
-    // Generating.. HMAC (iv + encrypted) to detect tampering
-    const hmac = crypto.createHmac("sha256", hmacKey).update(iv.toString("hex") + encrypted).digest("hex");
+    // Generating.. HMAC for iv + content
+    const hmac = crypto
+        .createHmac("sha256", hmacKey)
+        .update(iv.toString("hex") + encrypted)
+        .digest("hex");
 
     return {
         iv: iv.toString("hex"),
@@ -40,31 +44,39 @@ export const encrypt = (text) => {
     };
 };
 
+// Decrypting
 export const decrypt = (encrypted) => {
     const { iv, content, hmac } = encrypted;
 
-    // Verifying.. HMAC before decrypting
-    const computedHmac = crypto
-        .createHmac("sha256", hmacKey)
-        .update(iv + content)
-        .digest("hex");
+    // if HMAC present new message , will do integrity check
+    if (hmac) {
+        const computedHmac = crypto
+            .createHmac("sha256", hmacKey)
+            .update(iv + content)
+            .digest("hex");
 
-    if (hmac !== computedHmac) {
-        throw new Error("Message integrity check failed.Possible tampering !");
+        if (hmac !== computedHmac) {
+            throw new Error("Message integrity check failed. Possible tampering!");
+        }
     }
+    
+    //older messages so proceeding w/o HMAC check
 
-    const decipher = crypto.createDecipheriv(algorithm, secretKey, Buffer.from(iv, "hex"));
+    const decipher = crypto.createDecipheriv(
+        algorithm,
+        secretKey,
+        Buffer.from(iv, "hex")
+    );
     let decrypted = decipher.update(content, "hex", "utf8");
     decrypted += decipher.final("utf8");
 
     return decrypted;
 };
 
-// fallback for old messages (plain text or missing HMAC)
+//decryption 
 export const safeDecrypt = (message) => {
     try {
-        if (typeof message === "string") return message;
-        return decrypt(message);
+        if (typeof message === "string") return message; 
     } catch (error) {
         return "[Decryption Failed]";
     }
