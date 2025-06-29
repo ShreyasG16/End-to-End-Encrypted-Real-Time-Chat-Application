@@ -28,7 +28,7 @@ export const getMessages = async (req, res) => {
             ]
         });
 
-        // 🔐 Decrypt messages
+        // Decrypt messages
         const decryptedMessages = messages.map(msg => ({
             ...msg._doc,
             text: safeDecrypt(msg.text)
@@ -55,7 +55,7 @@ export const sendMessage = async (req, res) => {
             imageUrl = uploadResponse.secure_url;
         }
 
-        // 🔐 Encrypt text message before saving
+        // Encrypt text message before saving
         const encryptedText = text ? encrypt(text) : null;
 
         const newMessage = new Message({
@@ -67,7 +67,7 @@ export const sendMessage = async (req, res) => {
 
         await newMessage.save();
 
-        // 🔐 Send decrypted text via socket
+        // Send decrypted text via socket
         const receiverSocketId = getReceiverSocketId(receiverId);
         if (receiverSocketId) {
             io.to(receiverSocketId).emit("newMessage", {
@@ -76,7 +76,7 @@ export const sendMessage = async (req, res) => {
             });
         }
 
-        // 🔐 Send decrypted message to response too
+        //Send decrypted message to response too
         res.status(201).json({
             ...newMessage._doc,
             text: safeDecrypt(newMessage.text)

@@ -20,30 +20,47 @@ export const generateToken = (userId, res) => {
 
 const algorithm = "aes-256-cbc";
 const ivLength = 16;
-const secretKey = process.env.MESSAGE_SECRET_KEY; // Must be 32 bytes
+const secretKey = Buffer.from(process.env.MESSAGE_SECRET_KEY, "base64"); // 32-byte key
+const hmacKey = Buffer.from(process.env.MESSAGE_HMAC_KEY, "base64");     // 32-byte key
 
 export const encrypt = (text) => {
     const iv = crypto.randomBytes(ivLength);
-    const cipher = crypto.createCipheriv(algorithm, Buffer.from(secretKey, 'base64'), iv);
+    const cipher = crypto.createCipheriv(algorithm, secretKey, iv);
+
     let encrypted = cipher.update(text, "utf8", "hex");
     encrypted += cipher.final("hex");
 
+    // Generating.. HMAC (iv + encrypted) to detect tampering
+    const hmac = crypto.createHmac("sha256", hmacKey).update(iv.toString("hex") + encrypted).digest("hex");
+
     return {
         iv: iv.toString("hex"),
-        content: encrypted
+        content: encrypted,
+        hmac,
     };
 };
 
 export const decrypt = (encrypted) => {
-    const iv = Buffer.from(encrypted.iv, "hex");
-    const decipher = crypto.createDecipheriv(algorithm, Buffer.from(secretKey, 'base64'), iv);
-    let decrypted = decipher.update(encrypted.content, "hex", "utf8");
+    const { iv, content, hmac } = encrypted;
+
+    // Verifying.. HMAC before decrypting
+    const computedHmac = crypto
+        .createHmac("sha256", hmacKey)
+        .update(iv + content)
+        .digest("hex");
+
+    if (hmac !== computedHmac) {
+        throw new Error("Message integrity check failed.Possible tampering !");
+    }
+
+    const decipher = crypto.createDecipheriv(algorithm, secretKey, Buffer.from(iv, "hex"));
+    let decrypted = decipher.update(content, "hex", "utf8");
     decrypted += decipher.final("utf8");
 
     return decrypted;
 };
 
-// Optional fallback for old messages (plain text)
+// fallback for old messages (plain text or missing HMAC)
 export const safeDecrypt = (message) => {
     try {
         if (typeof message === "string") return message;
