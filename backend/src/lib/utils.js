@@ -48,36 +48,48 @@ export const encrypt = (text) => {
 export const decrypt = (encrypted) => {
     const { iv, content, hmac } = encrypted;
 
-    // if HMAC present new message , will do integrity check
-    if (hmac) {
-        const computedHmac = crypto
-            .createHmac("sha256", hmacKey)
-            .update(iv + content)
-            .digest("hex");
-
-        if (hmac !== computedHmac) {
-            throw new Error("Message integrity check failed. Possible tampering!");
-        }
+    if (!iv || !content || !hmac) {
+        console.log("[Missing decryption fields]");
+        throw new Error("Invalid encrypted format");
     }
-    
-    //older messages so proceeding w/o HMAC check
 
-    const decipher = crypto.createDecipheriv(
-        algorithm,
-        secretKey,
-        Buffer.from(iv, "hex")
-    );
+    // Validate HMAC
+    const computedHmac = crypto
+        .createHmac("sha256", hmacKey)
+        .update(iv + content)
+        .digest("hex");
+
+    if (computedHmac !== hmac) {
+        console.log("[HMAC mismatch]");
+        throw new Error("HMAC mismatch. Message may be tampered.");
+    }
+
+    const decipher = crypto.createDecipheriv(algorithm, secretKey, Buffer.from(iv, "hex"));
     let decrypted = decipher.update(content, "hex", "utf8");
     decrypted += decipher.final("utf8");
 
     return decrypted;
 };
 
+
 //decryption 
 export const safeDecrypt = (message) => {
     try {
-        if (typeof message === "string") return message; 
+        if (typeof message === "string") {
+            console.log("[Plaintext Message]", message);
+            return message;
+        }
+
+        const decrypted = decrypt(message);
+        if (!decrypted || decrypted.trim() === "") {
+            console.log("[Decryption returned empty]");
+            return "[Decryption Failed]";
+        }
+
+        console.log("[Decrypted Message]", decrypted);
+        return decrypted;
     } catch (error) {
+        console.log("[Decryption Error]", error.message);
         return "[Decryption Failed]";
     }
 };
