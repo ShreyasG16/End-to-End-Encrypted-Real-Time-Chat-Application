@@ -7,23 +7,21 @@ export const generateToken = (userId, res) => {
     });
 
     res.cookie("jwt", token, {
-        maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days in milliseconds
-        httpOnly: true, // prevents XSS
-        sameSite: "strict", // prevents CSRF
-        secure: process.env.NODE_ENV !== "development" // only secure cookies in prod
+        maxAge: 3 * 24 * 60 * 60 * 1000, 
+        httpOnly: true, 
+        sameSite: "strict",
+        secure: process.env.NODE_ENV !== "development" 
     });
 
     return token;
 };
-
-// ----------------- Message Encryption Utils -----------------
 
 const algorithm = "aes-256-cbc";
 const ivLength = 16;
 const secretKey = Buffer.from(process.env.MESSAGE_SECRET_KEY, "base64"); // For AES
 const hmacKey = Buffer.from(process.env.MESSAGE_HMAC_KEY, "base64");     // For HMAC
 
-// Encrypting.. message with AES-256-CBC and HMAC-SHA256
+// Encrypting.. message with AES-256-CBC and preventing tampering using HMAC-SHA256
 export const encrypt = (text) => {
     const iv = crypto.randomBytes(ivLength);
     const cipher = crypto.createCipheriv(algorithm, secretKey, iv);

@@ -18,7 +18,6 @@ dotenv.config()
 const PORT = process.env.PORT;
 const __dirname = path.resolve();
 
-//Custom NoSQL Injection Sanitizer
 app.use((req, res, next) => {
 
   console.log("X-Forwarded-For:", req.headers['x-forwarded-for']);
