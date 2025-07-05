@@ -5,7 +5,7 @@ import User from "../models/user.model.js";
 config();
 
 const seedUsers = [
-  //dummy users for testing...
+  //dummy users for testing....
   {
     email: "emma.thompson@example.com",
     fullName: "Emma Thompson",
