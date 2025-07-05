@@ -1,4 +1,4 @@
-# ChatSecure: Secure Real-Time Chat Application
+# End-to-End Encrypted Real-Time Chat Application
 
 A secure real-time chat application focused on **privacy**, **speed**, and **robust user management**.
 
@@ -7,15 +7,18 @@ A secure real-time chat application focused on **privacy**, **speed**, and **rob
 ---
 
 ## 🚀 Key Features
+  
+- 🔒 **End-to-End Message Encryption (AES-256-CBC)**  
+  Encrypts all messages before storing them in MongoDB to preserve privacy even if the database is exposed.
+
+- 🛡️ **Integrity Verification using HMAC-SHA-256**  
+  Ensured message authenticity and tamper detection by attaching HMAC signatures with each encrypted message before transmission.
 
 - 🔐 **User Authentication & Authorization (JWT)**  
   Ensures protected access to chat features with secure token-based login.
 
 - 🔑 **Password Security (bcrypt)**  
   Prevents credential leaks during potential database compromises.
-  
-- 🔒 **End-to-End Message Encryption (AES-256-CBC)**  
-  Encrypts all messages before storing them in MongoDB to preserve privacy even if the database is exposed.
 
 - 💬 **Real-Time Messaging (Socket.io)**  
   Enables seamless real-time communication between users.
@@ -23,8 +26,8 @@ A secure real-time chat application focused on **privacy**, **speed**, and **rob
 - 🟢 **Online User Presence Tracking**  
   Displays real-time online/offline status of users.
 
-- 🛡️ **Rate Limiting & Input Sanitization**  
-  Protects against DDoS and NoSQL Injection attacks.
+- 🛡️ **Rate Limiting**    
+  Mitigating DDoS attack vulnerabilities.
 
 - ⚙️ **Structured Error Handling**  
   Ensures consistent error responses and improved reliability.
@@ -35,7 +38,7 @@ A secure real-time chat application focused on **privacy**, **speed**, and **rob
 
 - **Frontend**: React.js, Tailwind CSS  
 - **Backend**: Node.js, Express.js  
-- **Security**: JWT, bcrypt, AES-256-CBC, rate-limiting  
+- **Security**: AES-256-CBC, HMAC-SHA-256, JWT, bcrypt, rate-limiting  
 - **Real-Time**: Socket.io  
 - **Database**: MongoDB
 
@@ -49,8 +52,8 @@ A secure real-time chat application focused on **privacy**, **speed**, and **rob
 
 ## 🧠 Skills Gained
 
-- Security Best Practices (Auth, Encryption, DDoS Defense)
-- Real-Time Data Communication with Sockets IO
+- Security Best Practices (Encryption, Auth, DDoS Defense)
+- Real-Time Data Communication with Sockets.io
 - MongoDB Schema Design
 - Client-Server Integration
 
