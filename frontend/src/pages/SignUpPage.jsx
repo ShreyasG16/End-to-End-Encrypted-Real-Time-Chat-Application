@@ -42,11 +42,7 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-3 bg-black text-white">
-      {/* Left Column - Logo */}
-      <div className="flex flex-col justify-center items-center p-6 sm:p-12">
-        <img src="/ChatSecure.png" alt="ChatSecure Logo" className="w-80 h-auto object-contain" />
-      </div>
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-black text-white">
 
       {/* Middle Column - Form */}
       <div className="flex flex-col justify-center items-center p-3 sm:p-10">
