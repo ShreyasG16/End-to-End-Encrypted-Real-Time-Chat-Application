@@ -4,6 +4,12 @@ A secure real-time chat application focused on **privacy**, **speed**, and **rob
 
 ![Sign Up](Preview.png)
 
+## Live Demo
+
+[![⭐ It's Live](https://img.shields.io/badge/⭐_It's_Live-Visit_Now-brightgreen?style=for-the-badge)](https://chatsecureapp.onrender.com/)
+
+
+
 ---
 
 ## 🚀 Key Features
